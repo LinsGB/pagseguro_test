@@ -11,8 +11,12 @@ export function GenerateCardToken() {
     const { sessionId } = (
       await PaymentService.getAuthorization(appId, appKey)
     ).data;
-    console.log("SESSION => ", sessionId);
-    PagSeguroDirectPayment.setSessionId(sessionId);
+    try {
+      PagSeguroDirectPayment.setSessionId('123');  
+    } catch (error) {
+      
+    }
+    
     PagSeguroDirectPayment.getPaymentMethods({
       amount: 1.0,
       success: (response: any) => {
@@ -38,13 +42,14 @@ export function GenerateCardToken() {
       },
     });
     PagSeguroDirectPayment.getInstallments({
-      amount: 1.00,
-      maxInstallmentNoInterest: 2,
+      amount: 100.00,
+      maxInstallmentNoInterest: 0,
       brand: "mastercard",
       success: (response: any) => {
         console.log("INSTALAMENTS => ", response);
       },
       error: (response: any) => {
+        console.log("ERROR => ", response)
         // Callback para chamadas que falharam.
       },
       complete: (response: any) => {

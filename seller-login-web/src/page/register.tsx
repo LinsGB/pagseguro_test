@@ -7,7 +7,7 @@ export function Register() {
 
     const redirectToPagseguroRegister = async () => {
         try {
-            const {authorizationCode} = (await SellerAuthService.getAuthorization(appId, appKey)).data
+            const {authorizationCode} = await SellerAuthService.getAuthorization(appId, appKey)
             console.log("authorizationCode => ", authorizationCode)
             window.location.href = `https://pagseguro.uol.com.br/v2/authorization/request.jhtml?code=${authorizationCode}`
         } catch (error) {
