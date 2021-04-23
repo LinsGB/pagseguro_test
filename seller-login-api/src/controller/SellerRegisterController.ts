@@ -19,6 +19,7 @@ interface PublicKeyRequestData {
 
 export default {
     async getAuthorization(req: Request, res: Response) {
+        console.log("GET AUTHORIZATION")
         const { appKey, appId } = req.params
         const config = {
             headers: {
@@ -52,13 +53,13 @@ export default {
         }
     },
     async getPublicKey(req:Request, res:Response) {
+        console.log("GET PUBLIC KEY")
         const {notificationCode, appId, appKey} = req.params
         try {
             const response = (await axios.get(`https://ws.pagseguro.uol.com.br/v2/authorizations/notifications/${notificationCode}?appId=${appId}&appKey=${appKey}`)).data
             const jsonResponse: PublicKeyRequestData = JSON.parse(toJson(response))
             res.json(jsonResponse.authorization.account)    
         } catch (error) {
-            console.log("ERROR => ", error)
             res.send("ERROR")
         }
         

@@ -4,8 +4,8 @@ import { toJson } from 'xml2json'
 
 export default {
     async getSessionId (req: Request, res: Response) {
+        console.log("GET SESSION ID")
         const {appKey, appId} = req.params
-        console.log("APPKEY => ", appKey)
         const config = {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -17,7 +17,6 @@ export default {
             const sessionId = JSON.parse(toJson(response)).session.id
             res.json({sessionId})       
         } catch (error) {
-            //console.log("ERROR => ", error)
             res.json({error})
         }
     }
