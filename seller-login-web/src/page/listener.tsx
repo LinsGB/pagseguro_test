@@ -41,11 +41,9 @@ export function QueryParamsDemo() {
           <button onClick={submitToGetPublicKey}>Get Public Key</button>
         </div>
       )}
-      {publicKey && (
-        <div>
+      {publicKey && 
           <h1>{publicKey}</h1>
-        </div>
-      )}
+      }
     </div>
   );
 }

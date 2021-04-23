@@ -1,9 +1,12 @@
+//TODO: VALIDAR ERROS
+//TODO: IMPEDIR GET CARD TOKEN SEM O APPID OU APPKEY
 import React, { useState, useEffect } from "react";
 import PaymentService from "../service/PaymentService";
 declare var PagSeguroDirectPayment: any;
 
 export function GenerateCardToken() {
   const [cardToken, setCardToken] = useState("");
+  const [messageError, setMessageError] = useState("");
   const [appId, setAppId] = useState("");
   const [appKey, setAppKey] = useState("");
 
@@ -11,58 +14,20 @@ export function GenerateCardToken() {
     const { sessionId } = (
       await PaymentService.getAuthorization(appId, appKey)
     ).data;
-    console.log("SESSION => ", sessionId);
-    PagSeguroDirectPayment.setSessionId(sessionId);
-    PagSeguroDirectPayment.getPaymentMethods({
-      amount: 1.0,
-      success: (response: any) => {
-        console.log("RESP => ", response);
-      },
-      error: (response: any) => {
-        // Callback para chamadas que falharam.
-      },
-      complete: (response: any) => {
-        // Callback para todas chamadas.
-      },
-    });
-    PagSeguroDirectPayment.getBrand({
-      cardBin: 516292,
-      success: (response: any) => {
-        console.log("BRAND => ", response);
-      },
-      error: (response: any) => {
-        // Callback para chamadas que falharam.
-      },
-      complete: (response: any) => {
-        // Callback para todas chamadas.
-      },
-    });
-    PagSeguroDirectPayment.getInstallments({
-      amount: 1.00,
-      maxInstallmentNoInterest: 2,
-      brand: "mastercard",
-      success: (response: any) => {
-        console.log("INSTALAMENTS => ", response);
-      },
-      error: (response: any) => {
-        // Callback para chamadas que falharam.
-      },
-      complete: (response: any) => {
-        // Callback para todas chamadas.
-      },
-    });
+    PagSeguroDirectPayment.setSessionId(sessionId); 
+    console.log("CARD NUMBER => ", process.env.REACT_APP_CARD_NUMBER)
     PagSeguroDirectPayment.createCardToken({
-      cardNumber: "5155901444768619", // Número do cartão de crédito
-      brand: "mastercard", // Bandeira do cartão
-      cvv: "574", // CVV do cartão
-      expirationMonth: "02", // Mês da expiração do cartão
-      expirationYear: "2029", // Ano da expiração do cartão, é necessário os 4 dígitos.
+      cardNumber: process.env.REACT_APP_CARD_NUMBER, 
+      brand: process.env.REACT_APP_CARD_BRAND, 
+      cvv: process.env.REACT_APP_CARD_CVV, 
+      expirationMonth: process.env.REACT_APP_CARD_EXPIRATION_MONTH, 
+      expirationYear: process.env.REACT_APP_CARD_EXPIRATION_YEAR, 
       success: (response: any) => {
-        console.log("TOKEnRESP => ", response);
         setCardToken(response.card.token);
       },
       error: (response: any) => {
-        console.log("ERROR => ", response);
+        console.log(response)
+        setMessageError('ALGO DEU ERRADO')
       },
     });
   };
@@ -79,7 +44,8 @@ export function GenerateCardToken() {
       ></input>
       <button onClick={generateCardToken}>Get Card Token</button>
       <br />
-      <h1>{cardToken}</h1>
+      {cardToken && <h1>CARD TOKEN: {cardToken}</h1>}
+      {messageError && <h1>MENSAGEM DE ERRO: {messageError}</h1>}
     </div>
   );
 }
