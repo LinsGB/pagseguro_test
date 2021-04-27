@@ -11,15 +11,17 @@ export function QueryParamsDemo() {
   const query = new URLSearchParams(useLocation().search);
   useEffect(() => {
     const notificationCode = query.get("notificationCode");
-    console.log("NOT => ", notificationCode)
+    console.log("NOT => ", notificationCode);
     setNotificationCode(notificationCode ? notificationCode : "");
   }, []);
 
   const submitToGetPublicKey = async () => {
     try {
-      const { publicKey } = (
-        await SellerAuthService.getPublicKey(appId, appKey, notificationCode)
-      ).data;
+      const publicKey = await SellerAuthService.getPublicKey(
+        appId,
+        appKey,
+        notificationCode
+      );
       setPublicKey(publicKey);
     } catch (error) {
       console.log("error => ", error);
@@ -41,9 +43,7 @@ export function QueryParamsDemo() {
           <button onClick={submitToGetPublicKey}>Get Public Key</button>
         </div>
       )}
-      {publicKey && 
-          <h1>{publicKey}</h1>
-      }
+      {publicKey && <h1>{publicKey}</h1>}
     </div>
   );
 }

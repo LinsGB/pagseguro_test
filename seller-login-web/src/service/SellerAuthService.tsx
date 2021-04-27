@@ -14,8 +14,9 @@ export default {
 
     async getPublicKey (appId:string, appKey:string, notificationCode:string) {
         try {
-            const response = (await axios.get(api+`/public_key/${appId}/${appKey}/${notificationCode}`)).data
-            console.log("RESP => ", response)
+            const {publicKey} = (await axios.get(api+`/public_key/${appId}/${appKey}/${notificationCode}`)).data
+            console.log("RESP => ", publicKey)
+            return publicKey
         } catch (error) {
             return error
         }
